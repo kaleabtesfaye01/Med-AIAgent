@@ -35,11 +35,3 @@ def generate_treatment_plan(raw_input: dict) -> str:
     result = sequence.invoke(input = filled)
     
     return result.content
-
-if __name__ == "__main__":
-    example = {
-        "symptoms": ["chest pain", "shortness of breath"],
-        "condition": {"age": 68, "mobility": "limited", "allergies": ["aspirin"]},
-        "location": "Covington, KY"
-    }
-    print(generate_treatment_plan(example))
