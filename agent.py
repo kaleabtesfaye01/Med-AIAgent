@@ -1,37 +1,53 @@
-from dotenv import load_dotenv
+import os
+from pathlib import Path
+from typing import Any, Dict
 from langchain_core.prompts import PromptTemplate
 from langchain.schema.runnable import RunnableSequence
 from langchain_openai import ChatOpenAI
-
 from utils.input_parser import parse_patient_input
-from utils.location_service import geocode, nearest_facilities
+from utils.location_service import geocode, find_nearby_hospitals
 
-load_dotenv()
+class TreatmentPlanAgent:
+    def __init__(
+        self,
+        model_name: str = os.getenv("LLM_MODEL", "gpt-4o-mini"),
+        temperature: float = 0.7
+    ):
+        self.llm = ChatOpenAI(temperature=temperature, model_name=model_name)
+        template_path = Path(__file__).parent / "prompts" / "treatment_plan_template.txt"
+        if not template_path.exists():
+            raise FileNotFoundError(f"Prompt template not found at {template_path}")
+        template_str = template_path.read_text()
+        prompt = PromptTemplate(
+            input_variables=["symptoms", "condition", "location"],
+            template=template_str
+        )
+        self.pipeline: RunnableSequence = prompt | self.llm
 
-# 1) Configure the LLM
-llm = ChatOpenAI(temperature=0.7, model_name="gpt-4o-mini")
+    def generate(
+        self,
+        raw_input: Dict[str, Any],
+        k: int = 3
+    ) -> str:
+        patient = parse_patient_input(raw_input)
+        coords = geocode(patient["location"])
+        hospitals = find_nearby_hospitals(coords["lat"], coords["lng"], k=k)
 
-# 2) Load your prompt template
-template_str = open("./prompts/treatment_plan_template.txt").read()
-prompt = PromptTemplate.from_template(template_str)
+        hospitals_str = ", ".join(
+            f"{h['name']} ({h.get('rating', 'N/A')}⭐) - {h['address']}" for h in hospitals
+        )
 
-# 3) Compose them: prompt → llm
-sequence: RunnableSequence = prompt | llm
+        filled = {
+            "symptoms": patient["symptoms"],
+            "condition": ", ".join(f"{key}: {val}" for key, val in patient["condition"].items()),
+            "location": f"{patient['location']} — Nearest: {hospitals_str}"
+        }
 
-def generate_treatment_plan(raw_input: dict) -> str:
-    # Parse & geocode
-    patient = parse_patient_input(raw_input)
-    coords  = geocode(patient["location"])
-    nearby  = nearest_facilities(coords)
+        response = self.pipeline.invoke(input=filled)
+        return response.content
 
-    # Build the filled template variables
-    filled = {
-        "symptoms": ", ".join(patient["symptoms"]),
-        "condition": ", ".join(f"{k}: {v}" for k, v in patient["condition"].items()),
-        "location": f"{patient['location']} ({'; '.join(f['name'] for f in nearby)})"
-    }
+# Singleton agent instance
+_agent = TreatmentPlanAgent()
 
-    # 4) Invoke the prompt+LLM pipeline
-    result = sequence.invoke(input = filled)
-    
-    return result.content
+def generate_treatment_plan(raw_input: Dict[str, Any]) -> str:
+    return _agent.generate(raw_input)
