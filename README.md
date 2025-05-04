@@ -16,6 +16,19 @@ Med_AIAgent combines large language models with geolocation capabilities to prod
 
 ---
 
+## Demo
+
+<div>
+    <a href="https://www.loom.com/share/5911ec8eea2641a5bf7b2401d0bbc3af">
+      <p>AI Treatment Plan Generator - 3 May 2025 - Watch Video</p>
+    </a>
+    <a href="https://www.loom.com/share/5911ec8eea2641a5bf7b2401d0bbc3af">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/5911ec8eea2641a5bf7b2401d0bbc3af-9894ff2442a07b37-full-play.gif">
+    </a>
+</div>
+
+---
+
 ## Features
 
 - **Intelligent Treatment Plan Generation**:
