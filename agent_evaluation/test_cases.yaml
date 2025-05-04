@@ -1,0 +1,35 @@
+- id: 1
+  symptoms: "chest pain, fever"
+  condition: "age:65; allergy:none; medications:aspirin"
+  location: "Cincinnati, OH, USA"
+  gold_plan: |
+    Immediate Action and Urgency Assessment:
+      - Sit the patient upright and administer supplemental oxygen.
+      - Urgency: Seek immediate medical attention due to chest pain and persistent fever.
+    Recommended Medical Actions:
+      - Perform an ECG and measure cardiac enzymes.
+      - Consult a cardiologist for further evaluation.
+
+- id: 2
+  symptoms: "headache"
+  condition: "age:30; allergy:penicillin"
+  location: "Columbus, OH, USA"
+  gold_plan: |
+    Immediate Action and Urgency Assessment:
+      - Rest in a quiet, dimly lit environment and maintain adequate hydration.
+      - Urgency: See a doctor within 48 hours if headache persists or worsens.
+    Recommended Medical Actions:
+      - Order MRI imaging if there is no improvement or if neurological signs appear.
+      - Administer OTC acetaminophen 500 mg every 6 hours as needed for pain relief.
+
+- id: 3
+  symptoms: "abdominal pain"
+  condition: "age:45; allergy:none; medications:ibuprofen"
+  location: "Cleveland, OH, USA"
+  gold_plan: |
+    Immediate Action and Urgency Assessment:
+      - Assess for signs of shock (e.g., hypotension, tachycardia).
+      - Urgency: Seek medical attention promptly if pain is severe, continuous, or accompanied by vomiting.
+    Recommended Medical Actions:
+      - Obtain a complete blood count (CBC) and an abdominal ultrasound.
+      - Refer to a gastroenterologist if indicated by imaging or lab results.

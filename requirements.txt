@@ -6,3 +6,9 @@ geopy
 python-dotenv
 googlemaps
 streamlit
+nltk
+rouge-score
+scikit-learn
+pandas
+pyyaml
+pytest
